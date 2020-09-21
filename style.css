@@ -1,0 +1,80 @@
+html {
+    scroll-behavior: smooth;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+  
+body {
+    margin: 0;
+    padding: 0;
+    zoom: 1;
+    max-width: 100%;
+    overflow-x: hidden;
+    font-family: 'Varela Round', sans-serif !important;
+}
+
+/* navbar */
+.dev{
+    font-size: 14px;
+}
+
+.round{
+    border-radius: 30px;
+}
+
+/* end of navbar */
+
+/* banner area */
+.home-banner-area {
+    padding-top: 5rem;
+    margin-top: 3rem;
+    background-size: initial; 
+    background-position: center;
+    overflow: hidden;
+}
+
+.home-banner-content{
+    padding-top: 0rem;
+}
+
+.home-banner-content h4 {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.home-banner-content h3 {
+    font-size: 20px;
+    margin-bottom: 20px; 
+}
+
+.home-banner-content h1 {
+    font-size: 60px;
+}
+
+.home-banner-content p {
+    margin-bottom: 45px; 
+    font-weight: 300;
+}
+
+.banner-img{
+    top: 15rem;
+    position: absolute;
+    right: 5rem;
+    min-width: 500px;
+    min-height: 300px;
+    max-width: 500px;
+    max-height: 300px;
+}
+/* end of banner area */
+
+/* search */
+.stat{
+    min-width: 150px;
+    min-height: 130px;
+}
+/* end of search */
+
+.stat1{
+    min-width: 180px;
+    min-height: 130px;
+}
