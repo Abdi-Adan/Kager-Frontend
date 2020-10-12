@@ -2,8 +2,7 @@ const client = contentful.createClient({
   // This is the space ID. A space is like a project folder in Contentful terms
   space: "sxafdz5tjxx7",
   // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-  accessToken:
-    "mUINoCKS_RuaNnbHtkU36jyLZ1L8mB9mtWWkeaiyVtA"
+  accessToken: "mUINoCKS_RuaNnbHtkU36jyLZ1L8mB9mtWWkeaiyVtA",
 });
 
 // variables
@@ -16,8 +15,6 @@ const cartItems = document.querySelector(".cart-items");
 const cartTotal = document.querySelector(".cart-total");
 const cartContent = document.querySelector(".cart-content");
 const productsDOM = document.querySelector(".products-center");
-const myModal = document.querySelector('#exampleModal');
-const form = document.querySelector('#booking-form');
 let cart = [];
 let buttonsDOM = [];
 //syntactical sugar of writing constructor function
@@ -31,16 +28,16 @@ class Products {
       // let result = await fetch("products.json");
       // let data = await result.json();
       let contentful = await client.getEntries({
-        content_type: "cars"
+        content_type: "cars",
       });
       console.log(contentful.items);
 
       let products = contentful.items;
-      products = products.map(item => {
-        const { name, price,seats,doors } = item.fields;
+      products = products.map((item) => {
+        const { name, price } = item.fields;
         const { id } = item.sys;
         const image = item.fields.image.fields.file.url;
-        return { name, price, id, image,seats,doors };
+        return { name, price, id, image };
       });
 
       return products;
@@ -54,53 +51,24 @@ class Products {
 class UI {
   displayProducts(products) {
     let result = "";
-    products.forEach(product => {
+    products.forEach((product) => {
       result += `
    <!-- single product -->
-        <div class="col-md-6 col-lg-4">
-            <div class="block-7">
-            <div class="img-container">
+        <article class="product">
+          <div class="img-container">
             <img
-              src="${product.image}"
+              src=${product.image}
               alt="product"
               class="product-img"
             />
-        
+            <button class="bag-btn" data-id=${product.id}>
+              <i class="fas fa-shopping-cart"></i>
+              add to bag
+            </button>
           </div>
-              <div class="text-center p-4">
-                <span class="excerpt d-block">${product.name}</span>
-                <span class="price"
-                  ><sup>$</sup> <span class="number">${product.price} </span>
-                  <sub>/Day</sub></span
-                >
-
-                <ul class="pricing-text mb-5">
-                  <li>
-                    <span class="material-icons mr-2"
-                      >airline_seat_recline_extra</span
-                    >${product.seats} Seats
-                  </li>
-                  <li>
-                    <span class="material-icons mr-2">emoji_transportation</span
-                    >${product.doors}car Doors
-                  </li>
-                  <li>
-                    <span class="material-icons mr-2">ac_unit</span>Auto,petrol
-                  </li>
-                </ul>
-
-                <a
-                  href="#book-tour"
-                  class="btn btn-primary d-block px-3 py-3 bag-btn"
-                   
-                  data-id=${product.id}
-                 
-                  >Book Now</a
-                >
-              </div>
-            </div>
-          </div>
-   
+          <h3>${product.name}</h3>
+          <h4>$${product.price}</h4>
+        </article>
         <!-- end of single product -->
    `;
     });
@@ -109,15 +77,15 @@ class UI {
   getBagButtons() {
     let buttons = [...document.querySelectorAll(".bag-btn")];
     buttonsDOM = buttons;
-    buttons.forEach(button => {
+    buttons.forEach((button) => {
       let id = button.dataset.id;
-      let inCart = cart.find(item => item.id === id);
+      let inCart = cart.find((item) => item.id === id);
 
       if (inCart) {
         button.innerText = "In Cart";
         button.disabled = true;
       }
-      button.addEventListener("click", event => {
+      button.addEventListener("click", (event) => {
         // disable button
         event.target.innerText = "In Cart";
         event.target.disabled = true;
@@ -135,7 +103,7 @@ class UI {
   setCartValues(cart) {
     let tempTotal = 0;
     let itemsTotal = 0;
-    cart.map(item => {
+    cart.map((item) => {
       tempTotal += item.price * item.amount;
       itemsTotal += item.amount;
     });
@@ -144,87 +112,9 @@ class UI {
   }
 
   addCartItem(item) {
-    myModal.innerHTML = `   <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">${item.name}</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-      <form action="#" class="bg-light p-5 contact-form" id="booking-form">
-      <div class="form-group">
-        <input type="text" class="form-control" placeholder="Your Name" name="name">
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" placeholder="Your Email" name="email">
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" placeholder="Phone" name="subject">
-      </div>
-                      <div class="col-md-12">
-                    <div class="form-group">
-                      <div class="input-wrap">
-                        <div class="icon">
-                          <span class="fa fa-wallet"></span>
-                        </div>
-                        <input
-                          type="text"
-                          class="form-control appointment_time"
-                          placeholder="${item.name}"
-                          name="time"
-                          disabled
-                        />
-                      </div>
-                    </div>
-                  </div>
-                   <div class="col-md-12">
-                    <div class="form-group">
-                      <div class="input-wrap">
-                        <div class="icon">
-                          <span class="fa fa-clock-o"></span>
-                        </div>
-                        <input
-                          type="text"
-                          class="form-control appointment_time"
-                          placeholder="$ ${item.price}"
-                          name="time"
-                          disabled
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  
-      <div class="form-group">
-        <input type="submit" value="Make Reservation" class="btn btn-secondary py-3 px-5">
-      </div>
-    </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal">
-              Continue
-            </button>
-          </div>
-        </div>
-      </div>
-    `
     const div = document.createElement("div");
     div.classList.add("cart-item");
     div.innerHTML = `<!-- cart item -->
-    
             <!-- item image -->
             <img src=${item.image} alt="product" />
             <!-- item info -->
@@ -257,7 +147,7 @@ class UI {
     closeCartBtn.addEventListener("click", this.hideCart);
   }
   populateCart(cart) {
-    cart.forEach(item => this.addCartItem(item));
+    cart.forEach((item) => this.addCartItem(item));
   }
   hideCart() {
     cartOverlay.classList.remove("transparentBcg");
@@ -267,7 +157,7 @@ class UI {
     clearCartBtn.addEventListener("click", () => {
       this.clearCart();
     });
-    cartContent.addEventListener("click", event => {
+    cartContent.addEventListener("click", (event) => {
       if (event.target.classList.contains("remove-item")) {
         let removeItem = event.target;
         let id = removeItem.dataset.id;
@@ -277,7 +167,7 @@ class UI {
       } else if (event.target.classList.contains("fa-chevron-up")) {
         let addAmount = event.target;
         let id = addAmount.dataset.id;
-        let tempItem = cart.find(item => item.id === id);
+        let tempItem = cart.find((item) => item.id === id);
         tempItem.amount = tempItem.amount + 1;
         Storage.saveCart(cart);
         this.setCartValues(cart);
@@ -285,7 +175,7 @@ class UI {
       } else if (event.target.classList.contains("fa-chevron-down")) {
         let lowerAmount = event.target;
         let id = lowerAmount.dataset.id;
-        let tempItem = cart.find(item => item.id === id);
+        let tempItem = cart.find((item) => item.id === id);
         tempItem.amount = tempItem.amount - 1;
         if (tempItem.amount > 0) {
           Storage.saveCart(cart);
@@ -300,15 +190,15 @@ class UI {
   }
   clearCart() {
     // console.log(this);
-    let cartItems = cart.map(item => item.id);
-    cartItems.forEach(id => this.removeItem(id));
+    let cartItems = cart.map((item) => item.id);
+    cartItems.forEach((id) => this.removeItem(id));
     while (cartContent.children.length > 0) {
       cartContent.removeChild(cartContent.children[0]);
     }
     this.hideCart();
   }
   removeItem(id) {
-    cart = cart.filter(item => item.id !== id);
+    cart = cart.filter((item) => item.id !== id);
     this.setCartValues(cart);
     Storage.saveCart(cart);
     let button = this.getSingleButton(id);
@@ -316,7 +206,7 @@ class UI {
     button.innerHTML = `<i class="fas fa-shopping-cart"></i>add to bag`;
   }
   getSingleButton(id) {
-    return buttonsDOM.find(button => button.dataset.id === id);
+    return buttonsDOM.find((button) => button.dataset.id === id);
   }
 }
 
@@ -326,7 +216,7 @@ class Storage {
   }
   static getProduct(id) {
     let products = JSON.parse(localStorage.getItem("products"));
-    return products.find(product => product.id === id);
+    return products.find((product) => product.id === id);
   }
   static saveCart(cart) {
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -346,7 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // get all products
   products
     .getProducts()
-    .then(products => {
+    .then((products) => {
       ui.displayProducts(products);
       Storage.saveProducts(products);
     })

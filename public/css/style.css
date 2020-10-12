@@ -363,6 +363,15 @@ mark,
 .list-unstyled {
   padding-left: 0;
   list-style: none; }
+/* --------------- Navbar ---------------- */
+
+.cart-btn {
+    position: relative;
+    cursor: pointer;
+}
+
+/* --------------- End of Navbar ---------------- */
+
 
 .list-inline {
   padding-left: 0;
